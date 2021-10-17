@@ -11,3 +11,5 @@ src/*.egg-info
 lib
 lib64
 settings.json
+myenv/
+__pycache__/
