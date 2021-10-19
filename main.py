@@ -9,8 +9,6 @@ from flask import Flask, render_template, Response, request, redirect, flash, ur
 
 # Importing the required Classes/Functions from Modules defined.
 from camera import VideoCamera
-from Graphical_Visualisation import Emotion_Analysis
-
 # Let us Instantiate the app
 app = Flask(__name__)
 
@@ -128,106 +126,6 @@ def RealTime():
     """ Video streaming (Real Time Image from WebCam Video) home page."""
 
     return render_template('RealTime.html')
-
-
-@app.route('/takeimage', methods=['POST'])
-def takeimage():
-    """ Captures Images from WebCam, saves them, does Emotion Analysis & renders. """
-
-    v = VideoCamera()
-    _, frame = v.video.read()
-    save_to = "static/"
-    cv2.imwrite(save_to + "capture" + ".jpg", frame)
-
-    result = Emotion_Analysis("capture.jpg")
-
-    # When Classifier could not detect any Face.
-    if len(result) == 1:
-        return render_template('NoDetection.html', orig=result[0])
-
-    sentence = mood(result[3])
-    activity = activities(result[3])
-    link = provide_url(result[3])
-    return render_template('Visual.html', orig=result[0], pred=result[1], bar=result[2], music=result[3],
-                           sentence=sentence, activity=activity, image=result[3], link=link)
-
-
-@app.route('/ManualUpload', methods=['POST'])
-def ManualUpload():
-    """ Manual Uploading of Images via URL or Upload """
-
-    return render_template('ManualUpload.html')
-
-
-@app.route('/uploadimage', methods=['POST'])
-def uploadimage():
-    """ Loads Image from System, does Emotion Analysis & renders."""
-
-    if request.method == 'POST':
-
-        # Check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-
-        file = request.files['file']
-
-        # If user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-
-        # If user uploads the correct Image File
-        if file and allowed_file(file.filename):
-
-            # Pass it a filename and it will return a secure version of it.
-            # The filename returned is an ASCII only string for maximum portability.
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            result = Emotion_Analysis(filename)
-
-            # When Classifier could not detect any Face.
-            if len(result) == 1:
-
-                return render_template('NoDetection.html', orig=result[0])
-
-            sentence = mood(result[3])
-            activity = activities(result[3])
-            link = provide_url(result[3])
-            return render_template('Visual.html', orig=result[0], pred=result[1], bar=result[2], music=result[3],
-                                   sentence=sentence, activity=activity, image=result[3], link=link)
-
-
-@app.route('/imageurl', methods=['POST'])
-def imageurl():
-    """ Fetches Image from URL Provided, does Emotion Analysis & renders."""
-
-    # Fetch the Image from the Provided URL
-    url = request.form['url']
-    req = Request(url,
-                  headers={'User-Agent': 'Mozilla/5.0'})
-
-    # Reading, Encoding and Saving it to the static Folder
-    webpage = urlopen(req).read()
-    arr = np.asarray(bytearray(webpage), dtype=np.uint8)
-    img = cv2.imdecode(arr, -1)
-    save_to = "static/"
-    cv2.imwrite(save_to + "url.jpg", img)
-
-    result = Emotion_Analysis("url.jpg")
-
-    # When Classifier could not detect any Face.
-    if len(result) == 1:
-        return render_template('NoDetection.html', orig=result[0])
-
-    sentence = mood(result[3])
-    activity = activities(result[3])
-    link = provide_url(result[3])
-    return render_template('Visual.html', orig=result[0], pred=result[1], bar=result[2], music=result[3],
-                           sentence=sentence, activity=activity, image=result[3], link=link)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
