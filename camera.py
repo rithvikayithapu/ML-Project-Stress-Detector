@@ -13,7 +13,13 @@ class VideoCamera(object):
         self.video = cv2.VideoCapture(0)
 
         self.stress_detection_pipeline = SequentialPipeline()
+        self.setup_pipeline()
+        self.stress_detection_pipeline.execute_setup()
 
+    def __del__(self):
+        self.video.release()
+
+    def setup_pipeline(self):
         self.stress_detection_pipeline.add_setup_stage('LOAD_MODELS', LoadModels())
         self.stress_detection_pipeline.add_stage('GRAB_FRAME', GrabFrame())
         self.stress_detection_pipeline.add_stage('FACE_DETECTION', FaceDetection())
@@ -26,11 +32,6 @@ class VideoCamera(object):
           'emotion_detection_model': ('model.json', 'model_weights.h5'),
           'stress_classifier_model': 'random_forest_model.sav'
         }
-
-        self.stress_detection_pipeline.execute_setup()
-
-    def __del__(self):
-        self.video.release()
 
     def get_frame(self):
         """It returns camera frames along with bounding boxes and predictions"""
