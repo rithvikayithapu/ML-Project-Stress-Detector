@@ -96,7 +96,7 @@ class StressClassifier(Stage):
 
     def execute(self, io, static_io):
         classifier_predictions = static_io.models['stress_classifier_model'].predict_proba(io.predictions)
-        io.stress_scores = self.calculate_score(classifier_predictions, [0.5, 0.01, 0.95]).round(2)
+        io.stress_scores = self.calculate_score(classifier_predictions, [0.3, 0.01, 0.90]).round(2)
         return status.SUCCESS
 
     def calculate_score(self, predict_probabilites, target_weights):
