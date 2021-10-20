@@ -30,7 +30,7 @@ class VideoCamera(object):
         self.stress_detection_pipeline.static_io.model_files = {
           'face_detection_model': 'haarcascade_frontalface_default.xml',
           'emotion_detection_model': ('model.json', 'model_weights.h5'),
-          'stress_classifier_model': 'random_forest_model.sav'
+          'stress_classifier_model': 'rfm.sav'
         }
 
     def get_frame(self):
