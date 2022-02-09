@@ -14,9 +14,9 @@
 </div>
 
 ## System Performance
-![performance](https://github.com/rithvik2607/ML-Project-Stress-Detector/blob/master/performance.png)
+![performance](https://github.com/rithvik2607/ML-Project-Stress-Detector/blob/master/performance.png?raw=true)
 
 ## Website Images
-![img1](https://github.com/rithvik2607/ML-Project-Stress-Detector/blob/master/web1.png)
+![img1](https://github.com/rithvik2607/ML-Project-Stress-Detector/blob/master/web1.png?raw=true)
 
-![img2](https://github.com/rithvik2607/ML-Project-Stress-Detector/blob/master/web2.png)
+![img2](https://github.com/rithvik2607/ML-Project-Stress-Detector/blob/master/web2.png?raw=true)
